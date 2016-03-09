@@ -1,0 +1,10 @@
+target/
+*.jpeg
+/target
+*.csv
+*.txt
+/logs
+/.idea
+/src/assemble
+*.bin
+/classes
