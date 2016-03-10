@@ -9,6 +9,8 @@ mavenを導入しているので注意です。それとIntelliJを使ってプ�
 
 slf4j + logbackによってログの書き出しを行っています。logsディレクトリにログが出力されます。
 
+大部分は車輪の再発明です。
+
 ### Package:
 
   - imageprocessing: 画像処理関連パッケージ。ここに重みの可視化も追加する予定。
@@ -17,9 +19,11 @@ slf4j + logbackによってログの書き出しを行っています。logsデ�
   
         - layers: ニューラルネットのlayer関連。HiddenLayerやAutoEncoder、LogisticRegressionなどもここにある。
         
-        - multilayer: 多層ネット関連。layersの各クラスを利用したものがここにある。MultiLayerPerceptronやStackedAutoEncoderなど。
+        - multilayer: 多層ネット関連。MultiLayerPerceptronやStackedAutoEncoderなど。
         
         - nlp: ニューラルネットを用いた言語モデル関連。NNLMやRNNLMなどがここにある。そのほかにもNLP関連のクラスがある。
+        
+        - examples: exampleコード。
     
     
 
