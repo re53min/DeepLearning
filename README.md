@@ -5,11 +5,11 @@ Deep Learning for Java
 
 Deep Learningについていろいろ学習したのでそれを実装+API化
 
-mavenを導入しているので注意です。それとIntelliJを使ってプログラミングしています(特に関係はないかも…)。
+mavenで依存関係のライブラリを管理しています。開発環境はIntelliJ IDEA 15.0.4です。
 
 slf4j + logbackによってログの書き出しを行っています。logsディレクトリにログが出力されます。
 
-大部分は車輪の再発明です。
+大部分は車輪の再発明です。 [Yusuke Sugomori][sugomori]さんのGitHubに最大級の感謝を。
 
 ### Package:
 
@@ -36,3 +36,5 @@ slf4j + logbackによってログの書き出しを行っています。logsデ�
   - http://yusugomori.com/projects/deep-learning/
   
   その他いろいろ
+  
+[sugomori]:https://github.com/yusugomori/DeepLearning "yusugomori"
