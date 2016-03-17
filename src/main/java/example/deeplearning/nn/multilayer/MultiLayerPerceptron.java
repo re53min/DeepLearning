@@ -2,8 +2,6 @@ package example.deeplearning.nn.multilayer;
 
 import example.deeplearning.nn.layers.HiddenLayer;
 import example.deeplearning.nn.layers.LogisticRegression;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
@@ -14,7 +12,7 @@ import java.util.Random;
  * Created by b1012059 on 2015/11/22.
  */
 public class MultiLayerPerceptron {
-    private static Logger log = LoggerFactory.getLogger(MultiLayerPerceptron.class);
+    //private static Logger log = LoggerFactory.getLogger(MultiLayerPerceptron.class);
     private int nInput;
     private int hiddenSize;
     private int nOutput;
@@ -35,7 +33,7 @@ public class MultiLayerPerceptron {
         else this.rng = rng;
 
         this.hLayer = new HiddenLayer(this.nInput, this.hiddenSize, null, null, N, rng, activation);
-        this.logisticLayer = new LogisticRegression(this.hiddenSize, this.nOutput, N, rng,activation);
+        this.logisticLayer = new LogisticRegression(this.hiddenSize, this.nOutput, N, rng);
     }
 
     /**
@@ -72,261 +70,5 @@ public class MultiLayerPerceptron {
 
         hLayer.forwardCal(input, outLayerInput);
         logisticLayer.reconstruct(outLayerInput, output);
-    }
-
-    /**
-     * Tester Method
-     */
-    private static void testBackPropagation() {
-
-        double inputData[][] = {
-                //0
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //1
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 1, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //2
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //3
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //4
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 1, 1, 0, 0, 0,
-                        0, 1, 0, 1, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //5
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //6
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //7
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 1, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //8
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //9
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0}
-        };
-
-        //教師データ
-        int teachData[][] = {
-                {1, 0},                  //0
-                {0, 1},                  //1
-                {0, 1},                  //2
-                {0, 1},                  //3
-                {1, 0},                  //4
-                {0, 1},                  //5
-                {1, 0},                  //6
-                {0, 1},                  //7
-                {1, 0},                  //8
-                {1, 0}                   //9
-        };
-
-        //応用問題
-        double testData[][] = {
-                //C
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //E
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //X
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 0, 1, 0, 1, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 1, 0, 1, 0, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //A
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 1, 0, 0, 0,
-                        0, 0, 1, 0, 1, 0, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0},
-
-                //Q
-                {0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 0, 0, 1, 0,
-                        0, 1, 0, 1, 0, 1, 0,
-                        0, 1, 0, 0, 1, 1, 0,
-                        0, 1, 1, 1, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 1}
-        };
-
-        /*double[][] inputData = {
-                {0., 0.},
-                {0., 1.},
-                {1., 0.},
-                {1., 1.},
-        };
-
-        /*int[][] teachData = {
-                {0, 1},
-                {1, 0},
-                {1, 0},
-                {0, 1},
-        };
-
-        // test data
-        double[][] testData = {
-                {0., 0.},
-                {0., 1.},
-                {1., 0.},
-                {1., 1.},
-        };*/
-
-        int nInput = 63;
-        int nHidden = 10;
-        int nOutput = 2;
-        //int nInput = 2;
-        //int nHidden[] = {2};
-        //int nOutput = 2;
-        //int nLayer = 1;
-        int epochs = 200;
-        int nTest = testData.length;
-        int N = inputData.length;
-        double learningRate = 0.1;
-        Random rng = new Random(123);
-
-        //インスタンス生成
-        MultiLayerPerceptron bp = new MultiLayerPerceptron(nInput, nHidden, nOutput, N, rng, "ReLU");
-
-        //Training
-        for (int epoch = 0; epoch < epochs; epoch++) {
-            bp.train(inputData, teachData, learningRate);
-            //if(learningRate > 1e-5) learningRate *= 0.995;
-            //log.info(String.valueOf(learningRate));
-        }
-
-        double testOutput[][] = new double[nTest][nOutput];
-        //String testStr[] = {"C", "E", "X", "A", "Q", "0", "5", "9"};
-
-
-        System.out.println("-----------------TEST-----------------");
-        //Input test data
-        for(int i = 0; i < nTest; i++){
-            //System.out.println("Input: " + testStr[i]);
-            bp.reconstruct(testData[i], testOutput[i]);
-            for(int j = 0; j < nOutput; j++){
-                System.out.print(testOutput[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-        System.out.println("----------------FINISH----------------");
-    }
-
-    public static void main(String args[]){
-        testBackPropagation();
     }
 }

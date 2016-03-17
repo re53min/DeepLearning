@@ -25,7 +25,7 @@ public class LogisticRegression {
      * @param nOut
      * @param N
      */
-    public LogisticRegression(int nIn, int nOut, int N, Random rng, String activation){
+    public LogisticRegression(int nIn, int nOut, int N, Random rng){
         this.nIn = nIn;
         this.nOut = nOut;
         this.N = N;
@@ -41,7 +41,7 @@ public class LogisticRegression {
         //重み行列の初期化
         for(int i = 0; i < nOut; i++) {
             for(int j = 0; j < nIn; j++){
-                wIO[i][j] = uniform(nIn, nOut, rng, activation);
+                wIO[i][j] = uniform(nIn, nOut, rng, null);
             }
         }
     }
@@ -227,14 +227,14 @@ public class LogisticRegression {
 
     }
 
-    public void reconstruct2(double input[], double projection[][], double output[]){
+    public void reconstruct2(double input[], double projection[][], double output[]) {
         //学習されたパラメータを使用した順方向計算
         /*
         ロジスティック回帰の順方向計算
          */
-        for(int i = 0; i < nOut; i++){
+        for (int i = 0; i < nOut; i++) {
             output[i] = 0;
-            for(int j = 0; j < nIn; j++){
+            for (int j = 0; j < nIn; j++) {
                 //入力とそれに対する重み行列の積
                 output[i] += wIO[i][j] * input[j];
             }
@@ -242,7 +242,7 @@ public class LogisticRegression {
             output[i] += bias[i];
         }
 
-        for(int n = 0; n < projection.length; n++) {
+        for (int n = 0; n < projection.length; n++) {
             for (int i = 0; i < nOut; i++) {
                 for (int j = 0; j < dim; j++) {
                     output[i] += wPO[i][j] * projection[n][j];
@@ -253,69 +253,5 @@ public class LogisticRegression {
         //Softmax関数
         //log.info("Softmax Function:");
         funSoftmax(output, nOut);
-
-    }
-
-    /**
-     * Testing Method
-     */
-    private static void testLogisticRegression(){
-        int nInput = 6;
-        int nOutput = 2;
-        int nTest = 2;
-        int epochs = 500;
-        double learningRate = 0.1;
-        Random rng = new Random(123);
-
-        double inputData[][] = {
-                {1., 1., 1., 0., 0., 0.},
-                {1., 0., 1., 0., 0., 0.},
-                {1., 1., 1., 0., 0., 0.},
-                {0., 0., 1., 1., 1., 0.},
-                {0., 0., 1., 1., 0., 0.},
-                {0., 0., 1., 1., 1., 0.}
-        };
-
-        int teachData[][] = {
-                {1, 0},
-                {1, 0},
-                {1, 0},
-                {0, 1},
-                {0, 1},
-                {0, 1}
-        };
-
-        double testData[][]= {
-
-                {0., 1., 0., 0., 0., 1.},
-                //{0., 0., 1., 1., 1., 0.}
-        };
-
-        double testOutput[][] = new double[nTest][nOutput];
-
-        LogisticRegression logReg = new LogisticRegression(nInput, nOutput, inputData.length, rng, null);
-
-        for(int epoch = 0; epoch < epochs; epoch++){
-            for(int i = 0; i < inputData.length; i++){
-                logReg.train(inputData[i], teachData[i], learningRate);
-                //if(learningRate > 1e-5) learningRate *= 0.995;
-                //log.info(String.valueOf(learningRate));
-            }
-        }
-
-
-        System.out.println("-----------------TEST-----------------");
-        for(int i = 0; i < nTest; i++){
-            logReg.reconstruct(testData[i], testOutput[i]);
-            for(int j = 0; j < nOutput; j++){
-                System.out.print(testOutput[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-    }
-
-    public static void main(String args[]){
-        testLogisticRegression();
     }
 }

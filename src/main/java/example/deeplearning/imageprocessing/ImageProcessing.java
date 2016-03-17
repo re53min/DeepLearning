@@ -1,7 +1,9 @@
 package example.deeplearning.imageprocessing;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by b1012059 on 2016/03/08.
@@ -12,10 +14,22 @@ public class ImageProcessing {
 
     }
 
-    public void imagePlot(){
-        File file = new File("");
-        BufferedImage write = new BufferedImage(100, 100, BufferedImage.TYPE_BYTE_GRAY);
+    public void imagePlot(double px[], int height, int width) {
+        //MemoryImageSource producer = new MemoryImageSource(width, height, px, 0, width);
+        Image img = null;//createImage(producer);
 
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = bi.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.dispose();
+
+        //PNG画像ファイルとして保存
+        try {
+            ImageIO.write(
+                    bi, "png", java.io.File.createTempFile("test", ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*

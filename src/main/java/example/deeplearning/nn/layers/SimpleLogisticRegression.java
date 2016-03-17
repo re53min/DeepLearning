@@ -23,8 +23,8 @@ public class SimpleLogisticRegression extends LogisticRegression {
      * @param nOut
      * @param N
      */
-    public SimpleLogisticRegression(int nIn, int nOut, int N, Random rng, String activation){
-        super(nIn, nOut, N, rng, activation);
+    public SimpleLogisticRegression(int nIn, int nOut, int N, Random rng){
+        super(nIn, nOut, N, rng);
         this.nIn = nIn;
         this.nOut = nOut;
         this.N = N;
@@ -40,7 +40,7 @@ public class SimpleLogisticRegression extends LogisticRegression {
         //重み行列の初期化
         for(int i = 0; i < nOut; i++) {
             for(int j = 0; j < nIn; j++){
-                wIO[i][j] = uniform(nIn, nOut, rng, activation);
+                wIO[i][j] = uniform(nIn, nOut, rng, null);
             }
         }
 
@@ -151,7 +151,7 @@ public class SimpleLogisticRegression extends LogisticRegression {
 
         double testOutput[][] = new double[nTest][nOutput];
 
-        LogisticRegression logReg = new LogisticRegression(nInput, nOutput, inputData.length, rng, null);
+        LogisticRegression logReg = new LogisticRegression(nInput, nOutput, inputData.length, rng);
 
         for(int epoch = 0; epoch < epochs; epoch++){
             for(int i = 0; i < inputData.length; i++){
