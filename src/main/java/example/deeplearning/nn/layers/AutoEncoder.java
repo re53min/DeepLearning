@@ -1,9 +1,10 @@
 package example.deeplearning.nn.layers;
 
+import example.deeplearning.nn.util.ActivationFunction;
+import example.deeplearning.nn.util.Distribution;
+
 import java.util.Random;
 import java.util.function.DoubleFunction;
-
-import static example.deeplearning.nn.utils.*;
 
 /**
  * AutoEncoder(Denoising AutoEncoder)
@@ -43,7 +44,7 @@ public class AutoEncoder {
             //double element = 1.0 / nIn;
             for (int i = 0; i < this.nOut; i++) {
                 for (int j = 0; j < this.nIn; j++) {
-                    this.wIO[i][j] = uniform(nOut, nIn, rng, activation);
+                    this.wIO[i][j] = Distribution.uniform(nOut, nIn, rng, activation);
                 }
             }
         } else {
@@ -58,14 +59,14 @@ public class AutoEncoder {
         ここラムダ式で記述
          */
         if (activation == "sigmoid" || activation == null) {
-            this.activation = (double tmpOut) -> funSigmoid(tmpOut);
-            this.dActivation = (double tmpOut) -> dfunSigmoid(tmpOut);
+            this.activation = (double tmpOut) -> ActivationFunction.funSigmoid(tmpOut);
+            this.dActivation = (double tmpOut) -> ActivationFunction.dfunSigmoid(tmpOut);
         } else if(activation == "tanh"){
-            this.activation = (double tmpOut) -> funTanh(tmpOut);
-            this.dActivation = (double tmpOut) -> dfunTanh(tmpOut);
+            this.activation = (double tmpOut) -> ActivationFunction.funTanh(tmpOut);
+            this.dActivation = (double tmpOut) -> ActivationFunction.dfunTanh(tmpOut);
         } else if(activation == "ReLU"){
-            this.activation = (double tmpOut) -> funReLU(tmpOut);
-            this.dActivation = (double tmpOut) -> dfunReLU(tmpOut);
+            this.activation = (double tmpOut) -> ActivationFunction.funReLU(tmpOut);
+            this.dActivation = (double tmpOut) -> ActivationFunction.dfunReLU(tmpOut);
         } else {
             //log.info("Activation function not supported!");
         }

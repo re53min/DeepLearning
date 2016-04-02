@@ -1,9 +1,8 @@
 package example.deeplearning.nn.layers;
 
-import java.util.Random;
+import example.deeplearning.nn.util.Distribution;
 
-import static example.deeplearning.nn.utils.binomial;
-import static example.deeplearning.nn.utils.uniform;
+import java.util.Random;
 
 /**
  * Created by b1012059 on 2015/11/22.
@@ -39,7 +38,7 @@ public class SimpleHiddenLayer extends HiddenLayer {
             this.wIO = new double[nOut][nIn];
             for(int i = 0; i < nOut; i++){
                 for(int j = 0; j < nIn; j++){
-                    this.wIO[i][j] = uniform(nIn, nOut, rng, null);
+                    this.wIO[i][j] = Distribution.uniform(nIn, nOut, rng, null);
                 }
             }
         } else{
@@ -74,7 +73,7 @@ public class SimpleHiddenLayer extends HiddenLayer {
     public void sampleHgive(double input[], double sample[]){
         for(int i = 0; i < nOut; i++) {
             if(activation.equals("sigmoid") || activation.equals(null))
-                sample[i] = binomial(1, hOutput(input, wIO[i], bias[i]), rng);
+                sample[i] = Distribution.binomial(1, hOutput(input, wIO[i], bias[i]), rng);
             else sample[i] = hOutput(input, wIO[i], bias[i]);
         }
     }

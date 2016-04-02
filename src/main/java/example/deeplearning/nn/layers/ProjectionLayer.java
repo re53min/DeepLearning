@@ -1,8 +1,8 @@
 package example.deeplearning.nn.layers;
 
-import java.util.Random;
+import example.deeplearning.nn.util.Distribution;
 
-import static example.deeplearning.nn.utils.uniform;
+import java.util.Random;
 
 /**
  * Created by b1012059 on 2016/01/31.
@@ -30,7 +30,7 @@ public class ProjectionLayer {
             //double element = 1.0 / nIn;
             for (int i = 0; i < this.dim; i++) {
                 for (int j = 0; j < this.vocab; j++) {
-                    this.wDI[i][j] = uniform(vocab, dim, rng, null);
+                    this.wDI[i][j] = Distribution.uniform(vocab, dim, rng, null);
                 }
             }
         } else {

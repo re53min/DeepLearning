@@ -1,8 +1,9 @@
 package example.deeplearning.nn.layers;
 
-import java.util.Random;
+import example.deeplearning.nn.util.utils;
+import example.deeplearning.nn.util.Distribution;
 
-import static example.deeplearning.nn.utils.*;
+import java.util.Random;
 
 /**
  * Logistic Regression
@@ -13,7 +14,7 @@ public class LogisticRegression {
     private int nIn;
     private int nOut;
     private int dim;
-    public double wIO[][];
+    private double wIO[][];
     private double wPO[][];
     private double bias[];
     private int N;
@@ -41,7 +42,7 @@ public class LogisticRegression {
         //重み行列の初期化
         for(int i = 0; i < nOut; i++) {
             for(int j = 0; j < nIn; j++){
-                wIO[i][j] = uniform(nIn, nOut, rng, null);
+                wIO[i][j] = Distribution.uniform(nIn, nOut, rng, null);
             }
         }
     }
@@ -73,7 +74,7 @@ public class LogisticRegression {
         //重み行列の初期化
         for(int i = 0; i < nOut; i++) {
             for(int j = 0; j < nIn; j++){
-                wIO[i][j] = uniform(nIn, nOut, rng, activation);
+                wIO[i][j] = Distribution.uniform(nIn, nOut, rng, activation);
             }
         }
     }
@@ -102,7 +103,7 @@ public class LogisticRegression {
             output[i] += bias[i];
         }
         //Softmax関数
-        funSoftmax(output, nOut);
+        utils.funSoftmax(output, nOut);
 
         /*
         ロジスティック回帰の逆方向学習
@@ -152,7 +153,7 @@ public class LogisticRegression {
 
         //Softmax関数
         //log.info("Softmax Function:");
-        funSoftmax(output, nOut);
+        utils.funSoftmax(output, nOut);
 
         for(int z = 0; z < nOut; z++) {
             try {
@@ -223,7 +224,7 @@ public class LogisticRegression {
         }
 
         //Softmax関数
-        funSoftmax(output, nOut);
+        utils.funSoftmax(output, nOut);
 
     }
 
@@ -252,6 +253,14 @@ public class LogisticRegression {
 
         //Softmax関数
         //log.info("Softmax Function:");
-        funSoftmax(output, nOut);
+        utils.funSoftmax(output, nOut);
+    }
+
+    public double[][] getW(){
+        return this.wIO;
+    }
+
+    public double[][] getWPO(){
+        return this.wPO;
     }
 }
