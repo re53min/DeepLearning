@@ -12,6 +12,7 @@ public class Distribution {
 
     /**
      * 一様分布
+     * activationによって分岐
      * @param nIn
      * @param nOut
      * @param rng
