@@ -11,8 +11,12 @@ public class Dropout {
     public Dropout(){
     }
 
-    /*
-    Dropout
+    /**
+     * Dropout
+     * @param size
+     * @param p
+     * @param rng
+     * @return
      */
     public static int[] dropout(int size, double p, Random rng){
         int mask[] = new int[size];
