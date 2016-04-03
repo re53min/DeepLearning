@@ -59,6 +59,7 @@ public class StackedAutoEncoderExample {
         double corruptionLevel = 0.3;
         double alpha = 0.1;
         double decayRate = 1E-2;
+        double dropout = 0.5;
 
         //インスタンスの生成
         StackedAutoEncoder sAE = new StackedAutoEncoder(nInput, nHidden, nOutput,
@@ -67,7 +68,7 @@ public class StackedAutoEncoderExample {
         //pre-training
         sAE.preTraining(inputData, alpha, epoch, corruptionLevel);
         //fine-tuning
-        sAE.fineTuning(inputData, teachData, alpha, epoch, decayRate);
+        sAE.fineTuning(inputData, teachData, alpha, epoch, decayRate, true, dropout);
 
         //test
         int nTest = 2;
