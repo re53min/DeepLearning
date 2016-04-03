@@ -56,7 +56,7 @@ public class MultiLayerPerceptron {
             hLayer.forwardCal(hiddenInput, outLayerInput);
             dOutput = logisticLayer.train(outLayerInput, teach[n], learningRate);
 
-            hLayer.backwardCal(hiddenInput, null, outLayerInput, dOutput, logisticLayer.wIO, learningRate);
+            hLayer.backwardCal(hiddenInput, null, outLayerInput, dOutput, logisticLayer.getW(), learningRate);
         }
     }
 

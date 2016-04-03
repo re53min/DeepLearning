@@ -3,15 +3,16 @@ package example.deeplearning.nn.multilayer;
 import example.deeplearning.nn.layers.AutoEncoder;
 import example.deeplearning.nn.layers.HiddenLayer;
 import example.deeplearning.nn.layers.LogisticRegression;
+import example.deeplearning.nn.util.Dropout;
+import example.deeplearning.nn.util.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
-import static example.deeplearning.nn.utils.*;
 
 
 /**
- * StackedAutoEncoderの実現。特に意味はない
+ * StackedAutoEncoderの実現
  * Created by b1012059 on 2015/09/03.
  * @author Wataru Matsudate
  */
@@ -102,6 +103,7 @@ public class StackedAutoEncoder {
      * fine-tuningメソッド
      * pre-trainingの結果を使い、出力層を追加して
      * バックプロパゲーション
+     * とりあえずDropout
      *
      * @param inputData
      * @param teach
@@ -109,51 +111,78 @@ public class StackedAutoEncoder {
      * @param epochs
      * @param decayRate
      */
-    public void fineTuning(int inputData[][], int teach[][], double learningRate, int epochs, double decayRate) {
+    public void fineTuning(int inputData[][], int teach[][], double learningRate, int epochs,
+                           double decayRate, boolean dropout, double pDropout) {
         int nLayer;
         double layerInput[] = new double[0];
-        double prevLayerInput[];
-        double dOutput[];
-        double dhOutput[] = null;
+        double prevLayerInput[] = new double[nIn];
         double defaultLR = learningRate;
-        ArrayList<double[]> input = new ArrayList<>();
-        ArrayList<double[]> output = new ArrayList<>();
+        List<int[]> dropoutMask;
+        List<double[]> layerOutput;
 
         for (int epoch = 0; epoch < epochs; epoch++) {
             for (int n = 0; n < N; n++) {
+
+                dropoutMask = new ArrayList<>(layerSize);
+                layerOutput = new ArrayList<>(layerSize+1);
+
                 for (int i = 0; i < layerSize; i++) {
-                    if (i == 0) {
-                        prevLayerInput = new double[nIn];
-                        for (int j = 0; j < nIn; j++) prevLayerInput[j] = inputData[n][j];
-                        nLayer = prevLayerInput.length;
-                    } else {
-                        nLayer = hiddenSize[i - 1];
-                        prevLayerInput = new double[hiddenSize[i - 1]];
-                        for (int j = 0; j < hiddenSize[i - 1]; j++) prevLayerInput[j] = layerInput[j];
-                    }
-                    input.add(prevLayerInput);
+                    if (i == 0)for(int j = 0; j < inputData[n].length; j++)prevLayerInput[j] = inputData[n][j];
+                    else prevLayerInput = layerInput;
+
+                    nLayer = prevLayerInput.length;
+                    layerOutput.add(prevLayerInput);
+
                     //Hidden layer
                     hLayer[i] = new HiddenLayer(nLayer, hiddenSize[i],
                             aeLayer[i].getWightIO(), aeLayer[i].getEncodeBias(), N, rng, activation);
                     layerInput = new double[hiddenSize[i]];
                     hLayer[i].forwardCal(prevLayerInput, layerInput);
-                    output.add(layerInput);
+
+                    //Dropout
+                    if(dropout){
+                        int mask[];
+                        mask = Dropout.dropout(hiddenSize[i], pDropout, rng);
+                        for(int k = 0; k < hiddenSize[i]; k++) layerInput[k] *= mask[k];
+
+                        dropoutMask.add(mask.clone());
+                    }
                 }
 
-                //Output Layer
-                dOutput = logLayer.train(layerInput, teach[n], learningRate);
-                for (int k = layerSize - 1; k <= 0; k--) {
+                //logistic layer forward and backward
+                double prevW[][];
+                double dLogLayer[] = logLayer.train(layerInput, teach[n], learningRate);
+                layerOutput.add(layerInput);
+
+                //hidden layers backward
+                double prevDout[] = dLogLayer;
+                double dOutput[] = new double[0];
+                for (int k = layerSize-1; k >= 0; k--) {
                     if (k == layerSize - 1) {
-                        hLayer[k].backwardCal(input.get(k), dhOutput, output.get(k), dOutput, logLayer.wIO, learningRate);
+                        prevW = logLayer.getW();
+                        //hLayer[k].backwardCal(input.get(k), dhOutput, output.get(k), dOutput, logLayer.getW(), learningRate);
                     } else {
-                        hLayer[k].backwardCal(input.get(k), dhOutput, output.get(k), dhOutput, hLayer[k + 1].getwIO(), learningRate);
+                        prevDout = dOutput;
+                        prevW = hLayer[k+1].getW();
+                        //hLayer[k].backwardCal(input.get(k), dhOutput, output.get(k), dhOutput, hLayer[k + 1].getW(), learningRate);
                     }
+
+                    //Dropout
+                    if(dropout){
+                        for(int j = 0; j < prevDout.length; j++){
+                            prevDout[j] *= dropoutMask.get(k)[j];
+                        }
+                    }
+
+                    dOutput = new double[hiddenSize[k]];
+                    hLayer[k].backwardCal(layerOutput.get(k), dOutput, layerOutput.get(k+1),
+                            prevDout, prevW, learningRate);
                 }
 
             }
             //Update LearningRate
             if (learningRate > 1E-3)
-                learningRate = updateLR(defaultLR, decayRate, epoch);
+                learningRate = utils.updateLR(defaultLR, decayRate, epoch);
             //System.out.println(learningRate);
         }
     }
