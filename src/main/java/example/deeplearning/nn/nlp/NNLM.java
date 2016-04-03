@@ -3,6 +3,8 @@ package example.deeplearning.nn.nlp;
 import example.deeplearning.nn.layers.HiddenLayer;
 import example.deeplearning.nn.layers.LogisticRegression;
 import example.deeplearning.nn.layers.ProjectionLayer;
+import example.deeplearning.nn.util.WordVectorSerializer;
+import example.deeplearning.nn.util.utils;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,8 +12,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.IntToDoubleFunction;
-
-import static example.deeplearning.nn.utils.*;
 
 
 
@@ -53,11 +53,11 @@ public class NNLM {
         this.logisticLayer = new LogisticRegression(dim, nHidden, this.nOutput, N, rng, "tanh");
 
         if (lrUpdateType == "UpdateLR" || lrUpdateType == null) {
-            this.learningType = (int epoch) -> updateLR(this.learningRate, this.decayRate, epoch);
+            this.learningType = (int epoch) -> utils.updateLR(this.learningRate, this.decayRate, epoch);
         } else if(lrUpdateType == "AdaGrad") {
-            //this.learningType = (int epoch) -> adaGrad(this.learningRate);
+            //this.learningType = (int epoch) -> utils.adaGrad(this.learningRate);
         } else if(lrUpdateType == "RMSProp"){
-            //this.learningType = (int epoch) -> rmsProp(this.learningRate);
+            //this.learningType = (int epoch) -> utils.rmsProp(this.learningRate);
         } else {
             //log.info("Learning Update Type not supported!");
         }
@@ -155,7 +155,7 @@ public class NNLM {
      */
     public double cosSim(NLP nlp, String word1, String word2){
 
-        return cosineSimilarity(pLayer.lookUpTable(nlp.getWordToId().get(word1)),
+        return utils.cosineSimilarity(pLayer.lookUpTable(nlp.getWordToId().get(word1)),
                 pLayer.lookUpTable(nlp.getWordToId().get(word2)));
     }
 
@@ -168,6 +168,6 @@ public class NNLM {
      * @param nlp
      */
     public void writeWord(int vocab, int dim, NLP nlp, String fileName){
-        writeWordVectors(vocab, dim, nlp, pLayer.getwDI(), fileName);
+        WordVectorSerializer.writeWordVectors(vocab, dim, nlp, pLayer.getwDI(), fileName);
     }
 }

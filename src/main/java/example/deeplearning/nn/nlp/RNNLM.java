@@ -2,14 +2,14 @@ package example.deeplearning.nn.nlp;
 
 import example.deeplearning.nn.layers.LogisticRegression;
 import example.deeplearning.nn.layers.RecurrentHLayer;
+import example.deeplearning.nn.util.WordVectorSerializer;
+import example.deeplearning.nn.util.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.function.IntToDoubleFunction;
-
-import static example.deeplearning.nn.utils.*;
 
 
 /**
@@ -43,14 +43,14 @@ public class RNNLM {
         else this.rng = rng;
 
         this.rLayer = new RecurrentHLayer(vocab, nHidden, null, null, null, null, N, rng, "sigmoid");
-        this.logisticLayer = new LogisticRegression(nHidden, this.nOutput, N, rng, "sigmoid");
+        this.logisticLayer = new LogisticRegression(nHidden, this.nOutput, N, rng);
 
         if (lrUpdateType == "UpdateLR" || lrUpdateType == null) {
-            this.learningType = (int epoch) -> updateLR(this.learningRate, this.decayRate, epoch);
+            this.learningType = (int epoch) -> utils.updateLR(this.learningRate, this.decayRate, epoch);
         } else if(lrUpdateType == "AdaGrad") {
-            //this.learningType = (int epoch) -> adaGrad(this.learningRate);
+            //this.learningType = (int epoch) -> utils.adaGrad(this.learningRate);
         } else if(lrUpdateType == "RMSProp"){
-            //this.learningType = (int epoch) -> rmsProp(this.learningRate);
+            //this.learningType = (int epoch) -> utils.rmsProp(this.learningRate);
         } else {
             log.info("Learning Update Type not supported!");
         }
@@ -83,7 +83,7 @@ public class RNNLM {
 
                 rLayer.forwardCal(vocabNumber, rhInput, outLayerInput);
                 dOutput = logisticLayer.train(outLayerInput, teachInput, lr);
-                rLayer.backwardCal(vocabNumber, null, outLayerInput, dOutput, logisticLayer.wIO, rhInput, lr);
+                rLayer.backwardCal(vocabNumber, null, outLayerInput, dOutput, logisticLayer.getW(), rhInput, lr);
 
                 rhInput = outLayerInput;
             }
@@ -99,7 +99,7 @@ public class RNNLM {
      */
     public double cosSim(NLP nlp, String word1, String word2){
 
-        return cosineSimilarity(rLayer.lookUpTable(nlp.getWordToId().get(word1)),
+        return utils.cosineSimilarity(rLayer.lookUpTable(nlp.getWordToId().get(word1)),
                 rLayer.lookUpTable(nlp.getWordToId().get(word2)));
     }
 
@@ -112,6 +112,6 @@ public class RNNLM {
      * @param nlp
      */
     public void writeWord(int vocab, int dim, NLP nlp, String fileName){
-        writeWordVectors(vocab, dim, nlp, rLayer.getwIH(), fileName);
+        WordVectorSerializer.writeWordVectors(vocab, dim, nlp, rLayer.getwIH(), fileName);
     }
 }
