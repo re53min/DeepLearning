@@ -24,6 +24,8 @@ slf4j + logbackによってログの書き出しを行っています。logsデ�
         - nlp: ニューラルネットを用いた言語モデル関連。NNLMやRNNLMなどがここにある。そのほかにもNLP関連のクラスがある。
         
         - examples: exampleコード。multilayerのexampleが置いてある。
+        
+        - util: ActivationFunctionやDropoutなどはここにある。
     
     
 
